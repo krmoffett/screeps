@@ -5,7 +5,7 @@ var roleBuilder = {
 
         if(creep.memory.building && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.building = false;
-            creep.say('🔄 harvest');
+            creep.say('🔄 withdraw');
         }
         if(!creep.memory.building && creep.store.getFreeCapacity() == 0) {
             creep.memory.building = true;
@@ -21,9 +21,9 @@ var roleBuilder = {
             }
         }
         else {
-            var sources = creep.room.find(FIND_SOURCES);
-            if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+            var spawns = creep.room.find(FIND_MY_SPAWNS);
+            if(creep.withdraw(spawns[0], 'energy') == ERR_NOT_IN_RANGE) {
+                creep.moveTo(spawns[0], {visualizePathStyle: {stroke: '#ffaa00'}});
             }
         }
     }

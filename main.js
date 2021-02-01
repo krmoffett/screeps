@@ -27,6 +27,14 @@ module.exports.loop = function () {
             {memory: {role: 'upgrader'}});
     }
 
+    var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
+
+    if(builders.length < 1) {
+        var newName = 'Builder' + Game.time;
+        Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,
+            {memory: {role: 'builder'}});
+    }
+
     if(Game.spawns['Spawn1'].spawning) {
         var spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning.name];
         Game.spawns['Spawn1'].room.visual.text(
