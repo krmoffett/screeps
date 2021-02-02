@@ -22,8 +22,10 @@ var roleBuilder = {
         }
         else {
             var spawns = creep.room.find(FIND_MY_SPAWNS);
-            if(creep.withdraw(spawns[0], 'energy') == ERR_NOT_IN_RANGE) {
-                creep.moveTo(spawns[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+            if (Game.spawns['Spawn1'].room.energyAvailable > 250) {
+                if(creep.withdraw(spawns[0], 'energy') == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(spawns[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+                }
             }
         }
     }
