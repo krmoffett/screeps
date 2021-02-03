@@ -1,17 +1,26 @@
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
-var creepFactory = require('creepFactory');
+const CreepFactory = require('./creepFactory');
 
 module.exports.loop = function () {
 
+    // Clear unused creep memory
     for(var name in Memory.creeps) {
         if(!Game.creeps[name]) {
             delete Memory.creeps[name];
         }
     }
 
-    creepFactory.buyCreeps();
+    var roomTierDefs = [300, 550];
+    var roomTier = 0;
+    var i = 1;
+    while (Game.spawns['Spawn1'].room.energyAvailable >= roomTierDefs[i]) {
+        roomTier++;
+        i++;
+    }
+    creepFactory = new CreepFactory();
+    creepFactory.buyCreeps(roomTier);
     //console.log("Capacity is: " + Game.spawns['Spawn1'].room.energyCapacityAvailable );
 
     var tower = Game.getObjectById('TOWER_ID');
