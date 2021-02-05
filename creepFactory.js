@@ -4,50 +4,29 @@ class CreepFactory {
         var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
         var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
 
-        const harvesterBodies = [[WORK,CARRY,MOVE], [WORK,WORK,WORK,WORK,MOVE]];
+        const harvesterBodies = [[WORK,CARRY,MOVE], [WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE]];
         const upgraderBodies = [[WORK,CARRY,MOVE], [WORK,WORK,CARRY,MOVE,MOVE]];
-        const carrierBodies = [[null], [CARRY,CARRY,MOVE]];
         let baseHarvestorCost = this.calculateCost(harvesterBodies[0]);
 
-        var harvestersNeeded = Game.spawns['Spawn1'].room.find(FIND_SOURCES).length;
-
-        const populationTiers = [{"harvesters": 3, "carriers": 0, "upgraders": 2, "builders": 2},
-                                 {"harvesters": harvestersNeeded, "carriers": 2,"upgraders": 2, "builders": 2}];
+        const populationTiers = [{"harvesters": 3, "upgraders": 2, "builders": 2}];
 
         // Current population tier is the lower of the room tier and number of defined population tiers
         var populationLimits = populationTiers[Math.min(roomTier, (populationTiers.length - 1))];
 
-        // Calculate harvester tier to be used for spawning harvesters and carriers
-        var harvesterTier = roomTier;
-        while ((this.calculateCost(harvesterBodies[harvesterTier]) > (Game.spawns['Spawn1'].room.energyAvailable)) &&
-                (harvesterTier > 0)) {
-                harvesterTier--;
-        }
-
         // Purchase harvestors as highest priority
         if(harvesters.length < populationLimits["harvesters"]) {
             var newName = 'Harvester' + Game.time;
-
-            Game.spawns['Spawn1'].spawnCreep(harvesterBodies[harvesterTier], newName,
-                {memory: {role: 'harvester'}});
-        }
-
-        // Purchase carriers
-        else if (Game.spawns['Spawn1'].room.energyAvailable > baseHarvestorCost && harvesterTier > 0) {
-            if (carriers.length < populationLimits["carriers"]) {
-                var newName = 'Carrier' + Game.time;
-                var carrierTier = roomTier;
-                while ((this.calculateCost(carrierBodies[carrierTier]) > (Game.spawns['Spawn1'].room.energyAvailable + baseHarvestorCost)) && (carrierTier > 1)) {
-                        carrierTier--;
-                }
-                Game.spawns['Spawn1'].spawnCreep(carrierBodies[carrierTier], newName,
-                    {memory: {role: 'carrier'}});
+            if (Game.spawns['Spawn1'].room.energyAvailable >= 450) {
+                Game.spawns['Spawn1'].spawnCreep(harvesterBodies[1], newName,
+                    {memory: {role: 'harvester'}});
             }
+            else {
+                Game.spawns['Spawn1'].spawnCreep(harvesterBodies[0], newName,
+                    {memory: {role: 'harvester'}});
+                }
         }
-
-        // Purchase upgraders
-        else if (Game.spawns['Spawn1'].room.energyAvailable > 400) {
-            if (upgraders.length < populationLimits["upgraders"]) {
+        else if(Game.spawns['Spawn1'].room.energyAvailable > 400) {
+            if(upgraders.length < populationLimits["upgraders"]) {
                 var newName = 'Upgrader' + Game.time;
                 var upgraderTier = roomTier;
                 console.log(upgraders.length + "/" + populationLimits["upgraders"]);
@@ -59,15 +38,14 @@ class CreepFactory {
                     {memory: {role: 'upgrader'}});
             }
 
-            // Purchase builders
-            else if ((builders.length < populationLimits["builders"] && Game.spawns['Spawn1'].room.find(FIND_MY_CONSTRUCTION_SITES).length > 0)
+            else if((builders.length < populationLimits["builders"] && Game.spawns['Spawn1'].room.find(FIND_MY_CONSTRUCTION_SITES).length > 0)
                     || builders.length < 2) {
                 var newName = 'Builder' + Game.time;
                 Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,
                     {memory: {role: 'builder'}});
             }
         }
-        if (Game.spawns['Spawn1'].spawning) {
+        if(Game.spawns['Spawn1'].spawning) {
             var spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning.name];
             Game.spawns['Spawn1'].room.visual.text(
                 '🛠️' + spawningCreep.memory.role,
