@@ -1,4 +1,5 @@
 var roleHarvester = require('role.harvester');
+var roleCarrier = require('role.carrier');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 const CreepFactory = require('./creepFactory');
