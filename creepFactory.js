@@ -38,7 +38,8 @@ class CreepFactory {
                     {memory: {role: 'upgrader'}});
             }
 
-            else if(builders.length < populationLimits["builders"] && Game.spawns['Spawn1'].room.find(FIND_MY_CONSTRUCTION_SITES).length > builders.length) {
+            else if((builders.length < populationLimits["builders"] && Game.spawns['Spawn1'].room.find(FIND_MY_CONSTRUCTION_SITES).length > 0)
+                    || builders.length < 2) {
                 var newName = 'Builder' + Game.time;
                 Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,
                     {memory: {role: 'builder'}});
