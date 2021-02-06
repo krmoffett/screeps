@@ -12,7 +12,7 @@ module.exports.loop = function () {
         }
     }
 
-    var roomTierDefs = [300, 550];
+    var roomTierDefs = [300, 550, 800];
     var roomTier = 0;
     var i = 1;
     while (Game.spawns['Spawn1'].room.energyAvailable >= roomTierDefs[i]) {
@@ -23,7 +23,7 @@ module.exports.loop = function () {
     creepFactory.buyCreeps(roomTier);
     //console.log("Capacity is: " + Game.spawns['Spawn1'].room.energyCapacityAvailable );
 
-    var tower = Game.getObjectById('TOWER_ID');
+    var tower = Game.getObjectById('601cf4a0f8a80ecde295c650');
     if(tower) {
         var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (structure) => structure.hits < structure.hitsMax
